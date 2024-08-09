@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+    <entity id="Player">
+        <components>
+            <component type="Graphics">
+                <arg name="textureName" value="sh_player" />
+                <arg name="size" value="256.0,256.0" />
+				<arg name="offset" value="0.0,0.0" />
+				<arg name="pivot" value="0.5,0.5" />
+				<arg name="rotation" value="90.0" />
+			</component>
+            <component type="Transform">
+                <arg name="position" value="2560.0,2240.0" />
+				<arg name="rotation" value="-90.0" />
+                <arg name="scale" value="0.5,0.5" />
+            </component>
+            <component type="ActorCommand">
+                <arg name="isPlayer" value="true" />
+				<arg name="observer" value="false" />
+            </component>
+			<component type="CameraFollow" />
+			<component type="PhysicsComponent">
+                <arg name="bodyType" value="Dynamic" />
+                <arg name="colliderType" value="Box" />
+				<arg name="density" value="1.0" />
+				<arg name="friction" value="0.2" />
+				<arg name="restitution" value="0.0" />
+				<arg name="linearDamping" value="0.0" />
+				<arg name="angularDamping" value="0.0" />
+				<arg name="width" value="8.0" />
+				<arg name="height" value="6.0" />
+			</component>
+        </components>
+    </entity>
+    <entity id="PlayerGun">
+        <components>
+            <component type="Graphics">
+				<arg name="textureName" value="sh_player" />
+				<arg name="size" value="256.0,256.0" />
+				<arg name="offset" value="256.0,0.0" />
+				<arg name="pivot" value="0.5,0.6" />
+				<arg name="rotation" value="0.0" />
+				<arg name="drawLayer" value="1" />
+			</component>
+            <component type="Transform">
+				<arg name="position" value="-25.0,0.0" />
+			</component>
+			<component type="RotateToAim" />
+			<component type="ActorCommand">
+				<arg name="isPlayer" value="true" />
+				<arg name="observer" value="true" />
+			</component>
+        </components>
+        <parent id="Player" />
+    </entity>
+	<entity id="PlayerProjectileSpawner">
+		<components>
+			<component type="ProjectileSpawner">
+				<arg name="projectileSpeed" value="850.0" />
+				<arg name="projectileDamage" value="10.0" />
+				<arg name="projectileHitRadius" value="32.0" />
+				<arg name="textureName" value="light_shell" />
+			</component>
+			<component type="Transform">
+				<arg name="position" value="0.0,-100.0" />
+			</component>
+			<component type="ActorCommand">
+				<arg name="isPlayer" value="true" />
+				<arg name="observer" value="true" />
+			</component>
+		</components>
+		<parent id="PlayerGun" />
+	</entity>
+    <entity id="PlayerTracksLeft">
+        <components>
+            <component type="Graphics">
+				<arg name="textureName" value="sh_player" />
+				<arg name="size" value="256.0,256.0" />
+				<arg name="offset" value="512.0,0.0" />
+				<arg name="pivot" value="0.79,0.54" />
+				<arg name="rotation" value="90.0" />
+				<arg name="drawLayer" value="-1" />
+				<arg name="animated" value="true" />
+				<arg name="animationFrames" value="2" />
+            </component>
+			<component type="AnimationFSM">
+				<arg name="initialState" value="Idle" />
+			</component>
+			<component type="ActorCommand">
+				<arg name="isPlayer" value="true" />
+				<arg name="observer" value="true" />
+			</component>
+            <component type="Transform" />
+        </components>
+        <parent id="Player" />
+    </entity>
+	<entity id="PlayerTracksLeftPS">
+		<components>
+			<component type="ParticleSystem">
+				<arg name="textureName" value="tire_track" />
+				<arg name="drawLayer" value="-2" />
+				<arg name="particleLifetime" value="12.0" />
+				<arg name="emissionRate" value="8.0" />
+				<arg name="initialSpeed" value="0.0,0.0" />
+				<arg name="initialRotation" value="0.0" />
+				<arg name="angularSpeed" value="0.0" />
+				<arg name="initialScale" value="1.0,1.0" />
+				<arg name="scalarSpeed" value="0.0,0.0" />
+				<arg name="inheritRotation" value="true" />
+				<arg name="autoPlay" value="false" />
+				<arg name="worldSpaceEmission" value="true" />
+				<arg name="color" value="1.0,0.0,0.0" />
+				<arg name="alpha" value="0.3" />
+				<arg name="alphaSpeed" value="-0.025" />
+				<arg name="maxParticleAmount" value="150" />
+			</component>
+			<component type="ActorIsMoving" />
+			<component type="Transform">
+				<arg name="position" value="-60.0,-75.0" />
+				<arg name="rotation" value="90.0" />
+			</component>
+		</components>
+		<parent id="PlayerTracksLeft" />
+	</entity>
+	<entity id="PlayerTracksLeftIdle">
+		<components>
+			<component type="AnimationState">
+				<arg name="name" value="Idle" />
+				<arg name="animationFrames" value="1" />
+				<arg name="framesPerSecond" value="0.0" />
+				<arg name="isLooped" value="true" />
+				<argList name="transitions">
+					<argTuple name="ToDrive1">
+						<arg name="state" value="Drive" />
+						<argList name="conditions">
+							<arg name="condition" value="moveY,NotEq,0.0" />
+						</argList>
+					</argTuple>
+					<argTuple name="ToDrive2">
+						<arg name="state" value="Drive" />
+						<argList name="conditions">
+							<arg name="condition" value="moveX,NotEq,0.0" />
+						</argList>
+					</argTuple>
+				</argList>
+			</component>
+		</components>
+		<parent id="PlayerTracksLeft" />
+	</entity>
+	<entity id="PlayerTracksLeftDrive">
+		<components>
+			<component type="AnimationState">
+				<arg name="name" value="Drive" />
+				<arg name="animationFrames" value="2" />
+				<arg name="framesPerSecond" value="5.0" />
+				<arg name="isLooped" value="true" />
+				<argList name="transitions">
+					<argTuple name="ToIdle">
+						<arg name="state" value="Idle" />
+						<argList name="conditions">
+							<arg name="condition1" value="moveY,Eq,0.0" />
+							<arg name="condition2" value="moveX,Eq,0.0" />
+						</argList>
+					</argTuple>
+				</argList>
+			</component>
+		</components>
+		<parent id="PlayerTracksLeft" />
+	</entity>
+    <entity id="PlayerTracksRight">
+        <components>
+            <component type="Graphics">
+				<arg name="textureName" value="sh_player" />
+				<arg name="size" value="256.0,256.0" />
+				<arg name="offset" value="512.0,0.0" />
+				<arg name="pivot" value="0.21,0.54" />
+				<arg name="rotation" value="90.0" />
+				<arg name="drawLayer" value="-1" />
+				<arg name="animated" value="true" />
+				<arg name="animationFrames" value="2" />
+            </component>
+			<component type="AnimationFSM">
+				<arg name="initialState" value="Idle" />
+			</component>
+			<component type="ActorCommand">
+				<arg name="isPlayer" value="true" />
+				<arg name="observer" value="true" />
+			</component>
+            <component type="Transform" />
+        </components>
+        <parent id="Player" />
+    </entity>
+	<entity id="PlayerTracksRightPS">
+		<components>
+			<component type="ParticleSystem">
+				<arg name="textureName" value="tire_track" />
+				<arg name="drawLayer" value="-2" />
+				<arg name="particleLifetime" value="12.0" />
+				<arg name="emissionRate" value="8.0" />
+				<arg name="initialSpeed" value="0.0,0.0" />
+				<arg name="initialRotation" value="0.0" />
+				<arg name="angularSpeed" value="0.0" />
+				<arg name="initialScale" value="1.0,1.0" />
+				<arg name="scalarSpeed" value="0.0,0.0" />
+				<arg name="inheritRotation" value="true" />
+				<arg name="autoPlay" value="false" />
+				<arg name="worldSpaceEmission" value="true" />
+				<arg name="color" value="1.0,0.0,0.0" />
+				<arg name="alpha" value="0.3" />
+				<arg name="alphaSpeed" value="-0.025" />
+				<arg name="maxParticleAmount" value="150" />
+			</component>
+			<component type="ActorIsMoving" />
+			<component type="Transform">
+				<arg name="position" value="-60.0,75.0" />
+				<arg name="rotation" value="90.0" />
+			</component>
+		</components>
+		<parent id="PlayerTracksRight" />
+	</entity>
+	<entity id="PlayerTracksRightIdle">
+		<components>
+			<component type="AnimationState">
+				<arg name="name" value="Idle" />
+				<arg name="animationFrames" value="1" />
+				<arg name="framesPerSecond" value="0.0" />
+				<arg name="isLooped" value="true" />
+				<argList name="transitions">
+					<argTuple name="ToDrive1">
+						<arg name="state" value="Drive" />
+						<argList name="conditions">
+							<arg name="condition" value="moveY,NotEq,0.0" />
+						</argList>
+					</argTuple>
+					<argTuple name="ToDrive2">
+						<arg name="state" value="Drive" />
+						<argList name="conditions">
+							<arg name="condition" value="moveX,NotEq,0.0" />
+						</argList>
+					</argTuple>
+				</argList>
+			</component>
+		</components>
+		<parent id="PlayerTracksRight" />
+	</entity>
+	<entity id="PlayerTracksRightDrive">
+		<components>
+			<component type="AnimationState">
+				<arg name="name" value="Drive" />
+				<arg name="animationFrames" value="2" />
+				<arg name="framesPerSecond" value="5.0" />
+				<arg name="isLooped" value="true" />
+				<argList name="transitions">
+					<argTuple name="ToIdle">
+						<arg name="state" value="Idle" />
+						<argList name="conditions">
+							<arg name="condition1" value="moveY,Eq,0.0" />
+							<arg name="condition2" value="moveX,Eq,0.0" />
+						</argList>
+					</argTuple>
+				</argList>
+			</component>
+		</components>
+		<parent id="PlayerTracksRight" />
+	</entity>
+	<entity id="PointerReticle">
+		<components>
+			<component type="Graphics">
+				<arg name="textureName" value="sh_player" />
+				<arg name="size" value="256.0,256.0" />
+				<arg name="offset" value="1024.0,0.0" />
+				<arg name="pivot" value="0.5,0.5" />
+				<arg name="rotation" value="0.0" />
+				<arg name="drawLayer" value="2" />
+			</component>
+			<component type="Transform">
+				<arg name="scale" value="0.75,0.75" />
+			</component>
+			<component type="PointerAim" />
+			<component type="ActorCommand">
+				<arg name="isPlayer" value="true" />
+				<arg name="observer" value="true" />
+			</component>
+		</components>
+	</entity>
+</entities>
